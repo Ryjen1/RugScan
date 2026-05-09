@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RugScan — Don't buy blind",
+  title: "Shrewd Guard — A 10-year veteran in your pocket",
   description:
-    "Paste any Solana token address. RugScan checks the mint authorities, holder concentration, liquidity, and runs a live honeypot test — then tells you in plain English whether it's safe to ape.",
+    "Shrewd analysis. Trader's guard. Paste any Solana token; in ~1 second get authorities, liquidity, holder distribution, dev history, honeypot test, and a sized playbook with stop-loss, take-profit, and kill criteria.",
 };
 
 export default function RootLayout({

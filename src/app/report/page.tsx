@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/Button";
 import { cn, shortAddr } from "@/lib/utils";
 
-const SESSION_KEY = "rugscan:pending-mint";
+const SESSION_KEY = "shrewd-guard:pending-mint";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -295,7 +295,7 @@ export default function ReportPage() {
         {/* Big metric strip */}
         <MetricStrip analysis={analysis} />
 
-        {/* RugScan's take — prominent recommendation card */}
+        {/* Shrewd Guard's take — prominent recommendation card */}
         <RecommendationCard analysis={analysis} />
 
         {/* Two-column: data on the left, chat on the right */}
@@ -1064,7 +1064,7 @@ function ChatPanel({
       <div className="rounded-2xl border border-[var(--border-strong)] bg-[var(--bg-elev)]">
         <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-3">
           <Sparkles size={14} className="text-[var(--accent)]" />
-          <span className="text-sm font-medium">Ask RugScan</span>
+          <span className="text-sm font-medium">Ask Shrewd Guard</span>
         </div>
         <div ref={scrollRef} className="h-[420px] space-y-3 overflow-auto p-4">
           {chat.length === 0 && !streaming && (

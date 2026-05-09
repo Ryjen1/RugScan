@@ -2,7 +2,7 @@
  * Jupiter API client.
  *
  * Jupiter's keyless endpoints (api.jup.ag and lite-api.jup.ag) at 0.5 RPS
- * give us nearly everything RugScan needs in a single fast call:
+ * give us nearly everything Shrewd Guard needs in a single fast call:
  *   - mint authority + freeze authority
  *   - holder count + top-holder concentration (from `audit.topHoldersPercentage`)
  *   - market cap, liquidity, USD price

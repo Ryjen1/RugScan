@@ -61,7 +61,7 @@ export interface Recommendation {
 }
 
 const DISCLAIMER =
-  "RugScan reads the chain so you can move faster. The trade is yours.";
+  "Shrewd Guard reads the chain so you can move faster. The trade is yours.";
 
 export function generateRecommendation(a: TokenAnalysis): Recommendation {
   const t = a.token;

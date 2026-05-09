@@ -3,7 +3,7 @@
  *
  * Unlike the previous "synthetic transaction" demos, these are REAL mainnet
  * tokens. Judges can copy any of these mints into Solscan and verify everything
- * RugScan reports — that builds trust. We just curate which ones to feature.
+ * Shrewd Guard reports — that builds trust. We just curate which ones to feature.
  *
  * The "danger" slot rotates: pump.fun has a steady firehose of fresh tokens
  * with mint authority active and 1-wallet ownership. The hardcoded address
@@ -42,7 +42,7 @@ export const DEMO_TOKENS: DemoToken[] = [
     label: "Fresh pump.fun token",
     emoji: "🔴",
     description:
-      "A token launched in the last hour by a dev who has minted 25+ tokens before. Token-2022, extremely low holder count, organic score 0. The textbook rug setup — see how RugScan flags it.",
+      "A token launched in the last hour by a dev who has minted 25+ tokens before. Token-2022, extremely low holder count, organic score 0. The textbook rug setup — see how Shrewd Guard flags it.",
     // PokémonGo (HBttQik...) — caught live during testing. If it dies (most
     // pump.fun tokens have <24h lifespan), the analyzer surfaces a helpful
     // error and judges can paste any current pump.fun mint instead. Try

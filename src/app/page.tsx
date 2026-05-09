@@ -6,7 +6,7 @@ import { Button } from "@/components/Button";
 import { ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import type { DemoToken } from "@/lib/demo";
 
-const SESSION_KEY = "rugscan:pending-mint";
+const SESSION_KEY = "shrewd-guard:pending-mint";
 
 export default function HomePage() {
   const router = useRouter();
@@ -47,7 +47,7 @@ export default function HomePage() {
             <div className="grid h-8 w-8 place-items-center rounded-md bg-[var(--accent)]/15 text-[var(--accent)]">
               <ShieldCheck size={18} />
             </div>
-            <span className="font-semibold tracking-tight">RugScan</span>
+            <span className="font-semibold tracking-tight">Shrewd Guard</span>
             <span className="ml-2 rounded-full border border-[var(--border-strong)] px-2 py-0.5 text-[10px] uppercase tracking-wider text-[var(--fg-muted)]">
               Solana
             </span>
@@ -64,12 +64,12 @@ export default function HomePage() {
             <span>1 in 4 new Solana tokens are rug-pulls</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
-            Read the contract before you ape.
+            A 10-year veteran in your pocket.
           </h1>
           <p className="mt-5 text-lg text-[var(--fg-muted)] text-balance">
-            Paste a Solana token. In ~1 second you get authorities, holder distribution,
-            liquidity flow, dev&rsquo;s history, live buy/sell ratio, honeypot test, and price action
-            across 5m / 1h / 6h / 24h &mdash; everything you need to decide.
+            Paste a Solana token. In ~1 second Shrewd Guard reads the chain and writes you a
+            sized playbook &mdash; entry, stop-loss, take-profit ladder, kill criteria, and the
+            non-obvious insight a newbie would miss. The trade is yours; the homework is done.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ export default function HomePage() {
       </section>
 
       <footer className="mt-auto border-t border-[var(--border)]/60 px-6 py-6 text-center text-xs text-[var(--fg-faint)]">
-        RugScan · Solana token safety, in plain English. Built for Dev3pack Global Hackathon 2026.
+        Shrewd Guard · A veteran trader's playbook for every Solana token. Built for Dev3pack Global Hackathon 2026.
       </footer>
     </main>
   );
