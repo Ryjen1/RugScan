@@ -3,8 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ShieldCheck,
-  AlertTriangle,
   ShieldAlert,
   Loader2,
   ArrowLeft,
@@ -12,6 +10,7 @@ import {
   Sparkles,
   TrendingUp,
   TrendingDown,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/Button";
 import { cn, shortAddr } from "@/lib/utils";
@@ -604,26 +603,32 @@ function MetricStrip({ analysis }: { analysis: TokenAnalysis }) {
 }
 
 // ---------- Veteran trader's playbook ----------
+// Compact, terminal-style. No hero band, no decorative emoji, no glow.
+// Density first; numbers do the talking.
 
 function RecommendationCard({ analysis }: { analysis: TokenAnalysis }) {
   const rec = analysis.recommendation;
   const v = analysis.risk.verdict;
+  const score = analysis.risk.score;
 
-  const conf = {
+  const tone = {
     safe: {
-      icon: <ShieldCheck className="h-7 w-7 text-[var(--accent)]" />,
-      bg: "border-[var(--accent)]/40 bg-[var(--accent)]/5",
-      ribbon: "bg-[var(--accent)]/15 text-[var(--accent)]",
+      ring: "border-[var(--accent)]/50",
+      chipBg: "bg-[var(--accent)] text-black",
+      barFill: "bg-[var(--accent)]",
+      barLabel: "text-[var(--accent)]",
     },
     caution: {
-      icon: <AlertTriangle className="h-7 w-7 text-[var(--warn)]" />,
-      bg: "border-[var(--warn)]/40 bg-[var(--warn)]/5",
-      ribbon: "bg-[var(--warn)]/15 text-[var(--warn)]",
+      ring: "border-[var(--warn)]/50",
+      chipBg: "bg-[var(--warn)] text-black",
+      barFill: "bg-[var(--warn)]",
+      barLabel: "text-[var(--warn)]",
     },
     danger: {
-      icon: <ShieldAlert className="h-7 w-7 text-[var(--danger)]" />,
-      bg: "border-[var(--danger)]/50 bg-[var(--danger)]/5 danger-bg",
-      ribbon: "bg-[var(--danger)]/15 text-[var(--danger)]",
+      ring: "border-[var(--danger)]/60",
+      chipBg: "bg-[var(--danger)] text-white",
+      barFill: "bg-[var(--danger)]",
+      barLabel: "text-[var(--danger)]",
     },
   }[v];
 
@@ -636,146 +641,210 @@ function RecommendationCard({ analysis }: { analysis: TokenAnalysis }) {
   }[rec.action];
 
   return (
-    <div className={`mt-6 rounded-2xl border p-5 sm:p-6 ${conf.bg}`}>
-      <div className="flex items-start gap-4">
-        <div className="shrink-0 rounded-xl bg-black/40 p-3">{conf.icon}</div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${conf.ribbon}`}
-            >
-              Veteran&rsquo;s take · {actionLabel}
-            </span>
-            <span className="text-[10px] uppercase tracking-widest text-[var(--fg-faint)]">
-              risk {analysis.risk.score}/100 · you call it
-            </span>
-          </div>
-          <h2 className="mt-2 text-xl font-semibold sm:text-2xl">{rec.headline}</h2>
-
-          {rec.thesis.length > 0 && (
-            <div className="mt-4">
-              <h3 className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
-                Read on the data
-              </h3>
-              <ul className="space-y-1.5 text-sm leading-relaxed">
-                {rec.thesis.map((t, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--fg-faint)]" />
-                    <span>{t}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {rec.edge && (
-            <div className="mt-4 rounded-md border border-[var(--info)]/40 bg-[var(--info)]/5 px-3 py-2 text-sm">
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--info)]">
-                What most traders miss
-              </span>
-              <p className="mt-1 leading-relaxed">{rec.edge}</p>
-            </div>
-          )}
-
-          {rec.plan && <PlaybookCard plan={rec.plan} />}
-
-          <p className="mt-4 text-[11px] italic text-[var(--fg-faint)]">{rec.disclaimer}</p>
+    <div
+      className={cn(
+        "mt-6 overflow-hidden rounded-xl border bg-[var(--bg-elev)] rise-in",
+        tone.ring
+      )}
+    >
+      {/* Compact terminal-style header */}
+      <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-2.5">
+        <div className="flex items-center gap-2">
+          <span
+            className={cn(
+              "mono inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+              tone.chipBg
+            )}
+          >
+            {actionLabel}
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-[var(--fg-faint)]">
+            Veteran&rsquo;s take
+          </span>
         </div>
+        <div className="mono flex items-center gap-2 text-[11px] text-[var(--fg-muted)]">
+          <span>RISK</span>
+          <span className={cn("font-bold", tone.barLabel)}>
+            {String(score).padStart(2, "0")}
+            <span className="text-[var(--fg-faint)]">/100</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Headline + thin score bar */}
+      <div className="px-4 pb-3 pt-3">
+        <h2 className="text-base font-semibold leading-snug sm:text-lg">{rec.headline}</h2>
+        <div className="relative mt-2 h-[3px] overflow-hidden rounded-full bg-black/40">
+          <div
+            className={cn("absolute inset-y-0 left-0 right-0 confidence-fill", tone.barFill)}
+            style={{ ["--score" as string]: Math.max(0, Math.min(1, (100 - score) / 100)) }}
+          />
+        </div>
+      </div>
+
+      {/* Thesis — terse numbered list, no big card around each item */}
+      {rec.thesis.length > 0 && (
+        <div className="border-t border-[var(--border)] px-4 py-3">
+          <SectionLabel>Read</SectionLabel>
+          <ol className="mt-1.5 space-y-1 text-[13px] leading-snug">
+            {rec.thesis.map((t, i) => (
+              <li key={i} className="flex gap-2">
+                <span className={cn("mono shrink-0 text-[11px] font-semibold", tone.barLabel)}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {/* Edge — single line callout, no gradient */}
+      {rec.edge && (
+        <div className="border-t border-[var(--border)] px-4 py-3">
+          <SectionLabel className="text-[var(--info)]">Edge</SectionLabel>
+          <p className="mt-1.5 text-[13px] leading-snug">{rec.edge}</p>
+        </div>
+      )}
+
+      {rec.plan && <PlaybookCard plan={rec.plan} tone={tone} />}
+
+      <div className="border-t border-[var(--border)] px-4 py-2.5 text-[10px] italic text-[var(--fg-faint)]">
+        {rec.disclaimer}
       </div>
     </div>
   );
 }
 
-function PlaybookCard({ plan }: { plan: TradePlan }) {
+// Small uppercase header — tighter than before
+function SectionLabel({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="mt-4 rounded-lg border border-[var(--border-strong)] bg-black/20 p-4">
-      <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
-        The play
-      </h3>
+    <h3
+      className={cn(
+        "text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--fg-muted)]",
+        className
+      )}
+    >
+      {children}
+    </h3>
+  );
+}
 
-      <div className="grid gap-3 sm:grid-cols-2">
+// ---------- Trade ticket ----------
+// Inlined inside the recommendation card. Terminal density, no hero band.
+
+interface ToneStyles {
+  barFill: string;
+  barLabel: string;
+}
+
+function PlaybookCard({ plan, tone }: { plan: TradePlan; tone: ToneStyles }) {
+  return (
+    <div className="border-t border-[var(--border)]">
+      {/* Section header */}
+      <div className="flex items-center justify-between border-b border-[var(--border)] px-4 py-1.5">
+        <SectionLabel>The play</SectionLabel>
+        <span className="mono text-[10px] uppercase tracking-wider text-[var(--fg-faint)]">
+          entry · stop · targets
+        </span>
+      </div>
+
+      {/* Two big numbers, divided cleanly */}
+      <div className="grid divide-y divide-[var(--border)] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
         {plan.positionSize && (
-          <PlayBox label="Position size">
-            <div className="text-base font-semibold text-[var(--fg)]">
-              ${plan.positionSize.min.toLocaleString()}–${plan.positionSize.max.toLocaleString()}
+          <div className="px-4 py-3">
+            <SectionLabel>Size</SectionLabel>
+            <div className="mono mt-1 text-lg font-semibold leading-tight">
+              ${formatBigUsd(plan.positionSize.min)}
+              <span className="text-[var(--fg-faint)]">–</span>$
+              {formatBigUsd(plan.positionSize.max)}
             </div>
-            <div className="mt-1 text-xs leading-relaxed text-[var(--fg-muted)]">
+            <div className="mt-1 text-[11px] leading-snug text-[var(--fg-muted)]">
               {plan.positionSize.rationale}
             </div>
-          </PlayBox>
+          </div>
         )}
 
         {plan.stopLossPct !== undefined && (
-          <PlayBox label="Stop-loss">
-            <div className="text-base font-semibold text-[var(--danger)]">
-              −{plan.stopLossPct}% from entry
+          <div className="px-4 py-3">
+            <SectionLabel>Stop</SectionLabel>
+            <div className="mono mt-1 flex items-baseline gap-1.5 text-lg font-semibold leading-tight text-[var(--danger)]">
+              −{plan.stopLossPct}%
+              <span className="text-[10px] font-normal uppercase tracking-wider text-[var(--fg-muted)]">
+                from entry
+              </span>
             </div>
-            <div className="mt-1 text-xs leading-relaxed text-[var(--fg-muted)]">
-              Set it before you click buy. Don&rsquo;t move it down.
+            <div className="mt-1 text-[11px] leading-snug text-[var(--fg-muted)]">
+              Set before you click buy. Don&rsquo;t move it down.
             </div>
-          </PlayBox>
+          </div>
         )}
       </div>
 
+      {/* Take-profit ladder — compact rows, no badges */}
       {plan.takeProfitLadder && plan.takeProfitLadder.length > 0 && (
-        <div className="mt-3">
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
-            Take-profit ladder
-          </div>
-          <ul className="space-y-1 text-sm">
+        <div className="border-t border-[var(--border)] px-4 py-3">
+          <SectionLabel>Targets</SectionLabel>
+          <div className="mono mt-1.5 divide-y divide-[var(--border)] rounded-md border border-[var(--border)] bg-black/20">
             {plan.takeProfitLadder.map((tp, i) => (
-              <li
+              <div
                 key={i}
-                className="flex items-center justify-between gap-2 rounded-md border border-[var(--border)] bg-[var(--bg-elev-2)] px-3 py-1.5"
+                className="flex items-center gap-3 px-3 py-1.5 text-[12px]"
               >
-                <span className="font-medium text-[var(--accent)]">{tp.at}</span>
-                <span className="text-xs text-[var(--fg-muted)]">{tp.sell}</span>
-              </li>
+                <span className="text-[var(--fg-faint)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className={cn("font-semibold", tone.barLabel)}>{tp.at}</span>
+                <span className="ml-auto text-[11px] text-[var(--fg-muted)]">
+                  {tp.sell}
+                </span>
+              </div>
             ))}
-          </ul>
-        </div>
-      )}
-
-      {plan.watchFor && plan.watchFor.length > 0 && (
-        <div className="mt-3">
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--fg-muted)]">
-            Watch for
           </div>
-          <ul className="space-y-1 text-xs leading-relaxed text-[var(--fg-muted)]">
-            {plan.watchFor.map((w, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--accent)]" />
-                <span>{w}</span>
-              </li>
-            ))}
-          </ul>
         </div>
       )}
 
-      {plan.killCriteria && plan.killCriteria.length > 0 && (
-        <div className="mt-3">
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-[var(--danger)]">
-            Kill the trade if
-          </div>
-          <ul className="space-y-1 text-xs leading-relaxed text-[var(--fg-muted)]">
-            {plan.killCriteria.map((k, i) => (
-              <li key={i} className="flex gap-2">
-                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--danger)]" />
-                <span>{k}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function PlayBox({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-md border border-[var(--border)] bg-[var(--bg-elev)] p-3">
-      <div className="text-[11px] uppercase tracking-wider text-[var(--fg-faint)]">{label}</div>
-      <div className="mt-1">{children}</div>
+      {/* Watch / Kill — collapsed by default, no decorative emoji */}
+      <div className="grid divide-y divide-[var(--border)] border-t border-[var(--border)] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+        {plan.watchFor && plan.watchFor.length > 0 && (
+          <details className="group px-4 py-2.5">
+            <summary className="flex cursor-pointer list-none items-center justify-between text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--fg-muted)] hover:text-[var(--fg)]">
+              <span>Watch</span>
+              <ChevronDown size={11} className="transition-transform group-open:rotate-180" />
+            </summary>
+            <ul className="mt-2 space-y-1 text-[12px] leading-snug text-[var(--fg-muted)]">
+              {plan.watchFor.map((w, i) => (
+                <li key={i} className="flex gap-2">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--accent)]" />
+                  <span>{w}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+        {plan.killCriteria && plan.killCriteria.length > 0 && (
+          <details className="group px-4 py-2.5">
+            <summary className="flex cursor-pointer list-none items-center justify-between text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--danger)] hover:opacity-80">
+              <span>Kill if</span>
+              <ChevronDown size={11} className="transition-transform group-open:rotate-180" />
+            </summary>
+            <ul className="mt-2 space-y-1 text-[12px] leading-snug text-[var(--fg-muted)]">
+              {plan.killCriteria.map((k, i) => (
+                <li key={i} className="flex gap-2">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[var(--danger)]" />
+                  <span>{k}</span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
     </div>
   );
 }

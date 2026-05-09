@@ -101,3 +101,59 @@ body::before {
   background-size: 200% 100%;
   animation: danger-shift 6s linear infinite;
 }
+
+/* Cards entering from below — gives the report a sense of "loading in" */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  animation: rise-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.rise-in-1 { animation-delay: 0.05s; }
+.rise-in-2 { animation-delay: 0.12s; }
+.rise-in-3 { animation-delay: 0.20s; }
+
+/* Confidence bar fill — animates from 0 to its target % on mount */
+@keyframes confidence-fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(var(--score, 0.5)); }
+}
+.confidence-fill {
+  transform-origin: left;
+  animation: confidence-fill 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Number that ticks in subtly — used for the big position-size figure */
+@keyframes number-pop {
+  from { opacity: 0; transform: translateY(4px) scale(0.96); letter-spacing: -0.05em; }
+  to   { opacity: 1; transform: translateY(0) scale(1); letter-spacing: 0; }
+}
+.number-pop {
+  animation: number-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Subtle conic shimmer behind action chips — feels alive without being noisy */
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+.ring-shimmer {
+  position: relative;
+  isolation: isolate;
+}
+.ring-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    currentColor 30deg,
+    transparent 60deg,
+    transparent 360deg
+  );
+  opacity: 0.18;
+  z-index: -1;
+  animation: ring-spin 6s linear infinite;
+}
