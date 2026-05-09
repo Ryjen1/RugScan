@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #07090d;
+  --bg-elev: #0d1117;
+  --bg-elev-2: #131a23;
+  --border: #1f2733;
+  --border-strong: #2a3340;
+  --fg: #e6edf3;
+  --fg-muted: #8b95a5;
+  --fg-faint: #5a6473;
+  --accent: #3fb68b;
+  --warn: #d4a73c;
+  --danger: #e5484d;
+  --info: #4f86e5;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-bg-elev: var(--bg-elev);
+  --color-bg-elev-2: var(--bg-elev-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --font-sans: var(--font-geist-sans, ui-sans-serif, system-ui);
+  --font-mono: var(--font-geist-mono, ui-monospace, "JetBrains Mono", monospace);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  border-color: var(--border);
+}
+
+::selection {
+  background: rgba(63, 182, 139, 0.35);
+}
+
+/* Subtle scanline / noise texture for the "serious tool" feel */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(79, 134, 229, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, rgba(63, 182, 139, 0.06), transparent 70%);
+  z-index: -1;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4554;
+}
+
+/* Code-style monospace blocks */
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Pulse animation for the loading state */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+.pulse-glow {
+  animation: pulse-glow 1.4s ease-in-out infinite;
+}
+
+/* Slow gradient for the danger banner */
+@keyframes danger-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.danger-bg {
+  background: linear-gradient(90deg, rgba(229, 72, 77, 0.18), rgba(229, 72, 77, 0.05), rgba(229, 72, 77, 0.18));
+  background-size: 200% 100%;
+  animation: danger-shift 6s linear infinite;
 }
