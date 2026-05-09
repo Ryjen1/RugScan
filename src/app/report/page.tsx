@@ -18,9 +18,25 @@ import { cn, shortAddr } from "@/lib/utils";
 
 const SESSION_KEY = "shrewd-guard:pending-mint";
 
+/**
+ * Paced-reveal config for the assistant bubble.
+ *
+ * The LLM streams tokens much faster than is comfortable to read, so the UI
+ * dumps walls of text. We let the network keep filling `content` at full
+ * speed, but only render the first `displayed` characters of it, advancing
+ * on a metronome. Result: the chat reads like a person typing, without
+ * actually slowing the model.
+ */
+const TYPING_CHARS_PER_TICK = 2;
+const TYPING_TICK_MS = 18;
+
 interface ChatMessage {
   role: "user" | "assistant";
   content: string;
+  /** how many chars of `content` are currently shown to the user */
+  displayed?: number;
+  /** true while the network is still feeding tokens into `content` */
+  pending?: boolean;
 }
 
 interface TokenStats {
@@ -135,6 +151,35 @@ export default function ReportPage() {
     void runAnalysis(stored);
   }, [router]);
 
+  // Paced reveal — at every tick, advance `displayed` toward `content.length`
+  // for any assistant message that's behind. Only runs when there's catch-up
+  // to do; idle once everything is fully shown.
+  useEffect(() => {
+    const anyBehind = chat.some(
+      (m) => m.role === "assistant" && (m.displayed ?? 0) < m.content.length
+    );
+    if (!anyBehind) return;
+
+    const id = window.setInterval(() => {
+      setChat((prev) => {
+        let changed = false;
+        const next = prev.map((m) => {
+          if (m.role !== "assistant") return m;
+          const have = m.displayed ?? 0;
+          if (have >= m.content.length) return m;
+          changed = true;
+          return {
+            ...m,
+            displayed: Math.min(m.content.length, have + TYPING_CHARS_PER_TICK),
+          };
+        });
+        return changed ? next : prev;
+      });
+    }, TYPING_TICK_MS);
+
+    return () => window.clearInterval(id);
+  }, [chat]);
+
   async function runAnalysis(value: string) {
     setLoading(true);
     setError(null);
@@ -165,7 +210,10 @@ export default function ReportPage() {
   async function streamExplanation() {
     if (!mint) return;
     setStreaming(true);
-    setChat((c) => [...c, { role: "assistant", content: "" }]);
+    setChat((c) => [
+      ...c,
+      { role: "assistant", content: "", displayed: 0, pending: true },
+    ]);
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -182,7 +230,14 @@ export default function ReportPage() {
         acc += decoder.decode(value, { stream: true });
         setChat((c) => {
           const next = [...c];
-          next[next.length - 1] = { role: "assistant", content: acc };
+          const last = next[next.length - 1];
+          next[next.length - 1] = {
+            ...last,
+            role: "assistant",
+            content: acc,
+            displayed: last.displayed ?? 0,
+            pending: true,
+          };
           return next;
         });
       }
@@ -192,10 +247,22 @@ export default function ReportPage() {
         next[next.length - 1] = {
           role: "assistant",
           content: e instanceof Error ? e.message : "Streaming failed",
+          displayed: 0,
+          pending: false,
         };
         return next;
       });
     } finally {
+      // Stream complete — clear the pending flag. The typewriter effect
+      // keeps revealing whatever is still buffered ahead of `displayed`.
+      setChat((c) => {
+        const next = [...c];
+        const last = next[next.length - 1];
+        if (last && last.role === "assistant") {
+          next[next.length - 1] = { ...last, pending: false };
+        }
+        return next;
+      });
       setStreaming(false);
     }
   }
@@ -205,7 +272,15 @@ export default function ReportPage() {
     if (!mint || !chatInput.trim() || streaming) return;
     const userMsg: ChatMessage = { role: "user", content: chatInput.trim() };
     const history = [...chat, userMsg];
-    setChat([...history, { role: "assistant", content: "" }]);
+    // Snap any prior assistant messages to fully-revealed before starting
+    // a new one, so the new bubble's typing animation isn't confused with
+    // an old one still catching up.
+    setChat([
+      ...history.map((m) =>
+        m.role === "assistant" ? { ...m, displayed: m.content.length } : m
+      ),
+      { role: "assistant", content: "", displayed: 0, pending: true },
+    ]);
     setChatInput("");
     setStreaming(true);
 
@@ -225,7 +300,14 @@ export default function ReportPage() {
         acc += decoder.decode(value, { stream: true });
         setChat((c) => {
           const next = [...c];
-          next[next.length - 1] = { role: "assistant", content: acc };
+          const last = next[next.length - 1];
+          next[next.length - 1] = {
+            ...last,
+            role: "assistant",
+            content: acc,
+            displayed: last.displayed ?? 0,
+            pending: true,
+          };
           return next;
         });
       }
@@ -235,10 +317,20 @@ export default function ReportPage() {
         next[next.length - 1] = {
           role: "assistant",
           content: err instanceof Error ? err.message : "Chat failed",
+          displayed: 0,
+          pending: false,
         };
         return next;
       });
     } finally {
+      setChat((c) => {
+        const next = [...c];
+        const last = next[next.length - 1];
+        if (last && last.role === "assistant") {
+          next[next.length - 1] = { ...last, pending: false };
+        }
+        return next;
+      });
       setStreaming(false);
     }
   }
@@ -1110,6 +1202,16 @@ function SuggestedQuestion({ q, onPick }: { q: string; onPick: (v: string) => vo
 
 function ChatBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
+  const fullLen = message.content.length;
+  const shown = isUser ? fullLen : Math.min(message.displayed ?? 0, fullLen);
+  const visible = isUser ? message.content : message.content.slice(0, shown);
+  // No characters yet AND the network is still working → "thinking" state.
+  const isThinking =
+    !isUser && shown === 0 && (message.pending || fullLen === 0);
+  // Either the typewriter is still catching up to `content`, or the
+  // network is still streaming — either way, show the caret.
+  const isTyping = !isUser && (shown < fullLen || message.pending);
+
   return (
     <div className={cn("flex", isUser ? "justify-end" : "justify-start")}>
       <div
@@ -1118,11 +1220,38 @@ function ChatBubble({ message }: { message: ChatMessage }) {
           isUser ? "bg-[var(--bg-elev-2)] text-[var(--fg)]" : "bg-black/40 text-[var(--fg)]"
         )}
       >
-        <pre className="whitespace-pre-wrap break-words font-sans">
-          {message.content || <span className="text-[var(--fg-faint)]">…</span>}
-        </pre>
+        {isThinking ? (
+          <span
+            className="inline-flex items-center gap-1.5 py-1"
+            aria-label="Shrewd Guard is thinking"
+          >
+            <ThinkingDot delay={0} />
+            <ThinkingDot delay={180} />
+            <ThinkingDot delay={360} />
+          </span>
+        ) : (
+          <pre className="whitespace-pre-wrap break-words font-sans">
+            {visible}
+            {isTyping && (
+              <span
+                aria-hidden
+                className="ml-px inline-block h-[1em] w-[0.5ch] -mb-[0.12em] animate-pulse rounded-[1px] bg-[var(--accent)] align-[-0.12em]"
+              />
+            )}
+          </pre>
+        )}
       </div>
     </div>
+  );
+}
+
+function ThinkingDot({ delay }: { delay: number }) {
+  return (
+    <span
+      aria-hidden
+      className="h-1.5 w-1.5 rounded-full bg-[var(--fg-muted)] animate-bounce"
+      style={{ animationDelay: `${delay}ms`, animationDuration: "1s" }}
+    />
   );
 }
 
