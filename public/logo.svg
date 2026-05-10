@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none" aria-label="Shrewd Guard">
+  <title>Shrewd Guard</title>
+  <defs>
+    <!-- Shield body gradient — uses brand greens for the "safe / on watch" feel -->
+    <linearGradient id="sg-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3fb68b"/>
+      <stop offset="100%" stop-color="#2a8c69"/>
+    </linearGradient>
+    <!-- Soft inner shadow for depth -->
+    <radialGradient id="sg-iris" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="60%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#07090d"/>
+    </radialGradient>
+    <!-- Sharp scan-line gradient -->
+    <linearGradient id="sg-scan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"  stop-color="#3fb68b" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#3fb68b" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#3fb68b" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Mark (centered in 80x80 box) -->
+  <g transform="translate(8 8)">
+    <!-- Shield outline — squared-off octagon, classical guard silhouette -->
+    <path
+      d="M32 2 L58 10 L62 30 Q62 52 32 62 Q2 52 2 30 L6 10 Z"
+      fill="url(#sg-shield)"
+      stroke="#3fb68b"
+      stroke-width="1.25"
+      stroke-linejoin="round"
+    />
+    <!-- Eye almond — drawn as two arcs meeting at sharp corners -->
+    <path
+      d="M12 30 Q32 14 52 30 Q32 46 12 30 Z"
+      fill="#07090d"
+      stroke="#0a0d12"
+      stroke-width="0.5"
+    />
+    <!-- Iris -->
+    <circle cx="32" cy="30" r="9" fill="url(#sg-iris)" stroke="#3fb68b" stroke-width="1"/>
+    <!-- Pupil — small diamond (token motif) -->
+    <path d="M32 26 L36 30 L32 34 L28 30 Z" fill="#3fb68b"/>
+    <!-- Catchlight -->
+    <circle cx="29" cy="27" r="1.2" fill="#e6edf3" opacity="0.9"/>
+    <!-- Horizontal scan-line — the "shrewd" / always-watching tell -->
+    <rect x="12" y="29.4" width="40" height="1.2" fill="url(#sg-scan)" opacity="0.85"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(86 0)" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+    <text x="0" y="36" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#e6edf3">Shrewd</text>
+    <text x="0" y="60" font-size="22" font-weight="600" letter-spacing="-0.5" fill="#3fb68b">Guard</text>
+    <!-- Tiny tagline kicker -->
+    <text x="2" y="74" font-size="8" font-weight="500" letter-spacing="2.5" fill="#8b95a5" font-family="ui-monospace, 'JetBrains Mono', monospace">SOLANA · RUG RADAR</text>
+  </g>
+</svg>

@@ -42,7 +42,7 @@ export const DEMO_TOKENS: DemoToken[] = [
     label: "Fresh pump.fun token",
     emoji: "🔴",
     description:
-      "A token launched in the last hour by a dev who has minted 25+ tokens before. Token-2022, extremely low holder count, organic score 0. The textbook rug setup — see how Shrewd Guard flags it.",
+      "A token launched in the last hour by a dev with a long prior-mint history, very few holders, and organic score zero. See how Shrewd Guard surfaces the warning signs.",
     // PokémonGo (HBttQik...) — caught live during testing. If it dies (most
     // pump.fun tokens have <24h lifespan), the analyzer surfaces a helpful
     // error and judges can paste any current pump.fun mint instead. Try

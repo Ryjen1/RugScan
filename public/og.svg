@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none" aria-label="Shrewd Guard — A 10-year veteran in your pocket">
+  <title>Shrewd Guard — A 10-year veteran in your pocket</title>
+  <defs>
+    <!-- Ambient background — matches the app's deep canvas + soft accent washes -->
+    <linearGradient id="og-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#0a0d12"/>
+      <stop offset="100%" stop-color="#07090d"/>
+    </linearGradient>
+    <radialGradient id="og-bloom-a" cx="0.18" cy="-0.05" r="0.55">
+      <stop offset="0%"  stop-color="#4f86e5" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#4f86e5" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="og-bloom-b" cx="0.95" cy="1.05" r="0.55">
+      <stop offset="0%"  stop-color="#3fb68b" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#3fb68b" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="og-bloom-c" cx="0.05" cy="0.95" r="0.45">
+      <stop offset="0%"  stop-color="#e5484d" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#e5484d" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Faint dotted grid for depth -->
+    <pattern id="og-dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.035"/>
+    </pattern>
+
+    <!-- Shield + eye gradients (same vocabulary as logo.svg) -->
+    <linearGradient id="og-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3fb68b"/>
+      <stop offset="100%" stop-color="#2a8c69"/>
+    </linearGradient>
+    <radialGradient id="og-iris" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#07090d"/>
+    </radialGradient>
+    <linearGradient id="og-scan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"  stop-color="#3fb68b" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#3fb68b" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#3fb68b" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Glow filter for the mark -->
+    <filter id="og-glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background layers -->
+  <rect width="1200" height="630" fill="url(#og-bg)"/>
+  <rect width="1200" height="630" fill="url(#og-bloom-a)"/>
+  <rect width="1200" height="630" fill="url(#og-bloom-b)"/>
+  <rect width="1200" height="630" fill="url(#og-bloom-c)"/>
+  <rect width="1200" height="630" fill="url(#og-dots)"/>
+
+  <!-- Top + bottom hairlines for that "product card" frame -->
+  <rect x="0" y="0"   width="1200" height="1" fill="#ffffff" fill-opacity="0.06"/>
+  <rect x="0" y="629" width="1200" height="1" fill="#ffffff" fill-opacity="0.06"/>
+
+  <!-- ================ Mark (left) ================ -->
+  <g transform="translate(96 168)" filter="url(#og-glow)">
+    <!-- Subtle outer ring of dots — radar feel -->
+    <g stroke="#3fb68b" stroke-opacity="0.18" fill="none">
+      <circle cx="150" cy="150" r="172"/>
+      <circle cx="150" cy="150" r="200" stroke-dasharray="2 8"/>
+    </g>
+
+    <!-- Shield -->
+    <path
+      d="M150 14 L268 47 L283 130 Q283 235 150 285 Q17 235 17 130 L32 47 Z"
+      fill="url(#og-shield)"
+      stroke="#3fb68b"
+      stroke-width="2"
+      stroke-linejoin="round"
+    />
+    <!-- Inner shield highlight to give body -->
+    <path
+      d="M150 30 L255 60 L267 132 Q267 222 150 268 Q33 222 33 132 L45 60 Z"
+      fill="#000"
+      fill-opacity="0.25"
+    />
+
+    <!-- Eye almond -->
+    <path
+      d="M55 150 Q150 70 245 150 Q150 230 55 150 Z"
+      fill="#07090d"
+    />
+
+    <!-- Iris -->
+    <circle cx="150" cy="150" r="42" fill="url(#og-iris)" stroke="#3fb68b" stroke-width="2"/>
+    <!-- Pupil (token diamond) -->
+    <path d="M150 130 L170 150 L150 170 L130 150 Z" fill="#3fb68b"/>
+    <!-- Catchlight -->
+    <circle cx="138" cy="138" r="5" fill="#e6edf3" opacity="0.9"/>
+
+    <!-- Scan line cutting across the eye -->
+    <rect x="55" y="148" width="190" height="3" fill="url(#og-scan)" opacity="0.9"/>
+  </g>
+
+  <!-- ================ Wordmark + tagline (right) ================ -->
+  <g font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" fill="#e6edf3">
+    <!-- Tiny mono kicker -->
+    <text x="500" y="186" font-size="22" font-weight="500" letter-spacing="6" fill="#8b95a5"
+          font-family="ui-monospace, 'JetBrains Mono', monospace">SHREWD GUARD · SOLANA</text>
+
+    <!-- Headline -->
+    <text x="500" y="270" font-size="78" font-weight="600" letter-spacing="-1.5">A 10-year veteran</text>
+    <text x="500" y="346" font-size="78" font-weight="600" letter-spacing="-1.5" fill="#3fb68b">in your pocket.</text>
+
+    <!-- Sub-headline -->
+    <text x="500" y="412" font-size="26" font-weight="400" fill="#8b95a5" letter-spacing="-0.2">
+      Paste a Solana token. Get a sized playbook in ~1 second —
+    </text>
+    <text x="500" y="446" font-size="26" font-weight="400" fill="#8b95a5" letter-spacing="-0.2">
+      entry, stop-loss, take-profit, and the catch newbies miss.
+    </text>
+  </g>
+
+  <!-- ================ Bottom strip — hook + chips ================ -->
+  <g transform="translate(96 540)" font-family="ui-sans-serif, system-ui, sans-serif">
+    <!-- Live red dot + line -->
+    <circle cx="14" cy="14" r="6" fill="#e5484d"/>
+    <circle cx="14" cy="14" r="10" fill="#e5484d" fill-opacity="0.25"/>
+    <text x="36" y="20" font-size="20" fill="#e6edf3" font-weight="500" letter-spacing="-0.2">
+      <tspan font-weight="700">1 in 4</tspan>
+      <tspan fill="#8b95a5"> new Solana tokens are rug-pulls.</tspan>
+    </text>
+
+    <!-- Right-aligned feature chips -->
+    <g transform="translate(644 0)" font-size="16" fill="#e6edf3" font-weight="500">
+      <g transform="translate(0 0)">
+        <rect x="0" y="0" width="148" height="28" rx="14" fill="#0d1117" stroke="#1f2733"/>
+        <text x="14" y="19" letter-spacing="-0.1">On-chain decoded</text>
+      </g>
+      <g transform="translate(160 0)">
+        <rect x="0" y="0" width="138" height="28" rx="14" fill="#0d1117" stroke="#1f2733"/>
+        <text x="14" y="19" letter-spacing="-0.1">Honeypot test</text>
+      </g>
+      <g transform="translate(308 0)">
+        <rect x="0" y="0" width="152" height="28" rx="14" fill="#0d1117" stroke="#1f2733"/>
+        <text x="14" y="19" letter-spacing="-0.1">Trader's playbook</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Footer signature -->
+  <g font-family="ui-monospace, 'JetBrains Mono', monospace">
+    <text x="1104" y="600" text-anchor="end" font-size="14" fill="#5a6473" letter-spacing="2">
+      DEV3PACK 2026
+    </text>
+  </g>
+</svg>

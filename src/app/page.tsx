@@ -60,8 +60,8 @@ export default function HomePage() {
       <section className="px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[var(--border-strong)] bg-[var(--bg-elev)] px-3 py-1 text-xs text-[var(--fg-muted)]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--danger)] pulse-glow" />
-            <span>1 in 4 new Solana tokens are rug-pulls</span>
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)] pulse-glow" />
+            <span>On-chain truth · Solana-native · sub-second analysis</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-semibold tracking-tight text-balance">
             A 10-year veteran in your pocket.

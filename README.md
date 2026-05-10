@@ -12,8 +12,8 @@ Built for **Dev3pack Global Hackathon 2026**.
 Paste any Solana token mint — or pick one of the three pre-loaded demo tokens — and Shrewd Guard will:
 
 1. **Pull live token data** from Jupiter Tokens V2 in one call: mint authorities, holder count, top-10 concentration, dev wallet history, organic score, market cap, liquidity, verification status, 24h trading stats
-2. **Run a live honeypot test** by getting a Jupiter buy quote and a reverse sell quote — if you can buy but not sell, you're being scammed
-3. **Score the rug-pull risk** with a rules engine calibrated against real pump.fun rug patterns
+2. **Run a live honeypot test** by getting a Jupiter buy quote and a reverse sell quote — if a token is buyable but not sellable, that's surfaced immediately
+3. **Score the trade risk** with a rules engine that weighs authorities, concentration, liquidity flow, and the dev's prior token history
 4. **Generate a veteran trader's playbook** — concrete numbers a 10-year pro would give to a less experienced trader: position size in dollars, stop-loss percentage, take-profit ladder, watch criteria, kill criteria, plus the non-obvious insight a newbie would miss
 5. **Stream a plain-English explanation** via an LLM (Groq Llama 3.3 70B by default) with a chat box for follow-up questions
 
@@ -23,9 +23,9 @@ If no LLM API key is configured, Shrewd Guard still works — it streams a deter
 
 ## The problem
 
-Every day, thousands of fresh tokens launch on Solana via pump.fun and similar launchpads. **Most of them are rugs.** Mint authority left open, single wallet sitting on 80%+ of supply, honeypots that take your SOL but won't let you sell back. Crypto traders lose money to these constantly.
+Solana traders move fast. New tokens launch every minute, group chats fill with shilled contracts, and you have seconds to make a call. The on-chain data needed to evaluate a token — mint authorities, holder distribution, liquidity depth, dev history, honeypot risk — is all there, but turning it into a concrete trade decision under time pressure is hard.
 
-The data to detect rugs is publicly available — Jupiter's audit pipeline already has it. Existing tools (RugCheck, Birdeye Security, DexScreener) show you the data. **They don't tell you what to do with it.** Shrewd Guard is the first analyzer that gives traders a sized playbook — entry, stop, exit, and kill criteria — like a pro sitting at the next desk would.
+Shrewd Guard reads the chain and gives traders a sized playbook for any contract: entry size, stop-loss, take-profit ladder, kill criteria, and the non-obvious insight a less experienced trader would miss. The trade is yours; the homework is done.
 
 ---
 
@@ -151,11 +151,11 @@ That's the demo. The 60 seconds judges remember.
 
 ## Why this wins Dev3pack
 
-- **Real, current problem.** Solana memecoin rugs daily. Visceral.
-- **Validated category, sharper wedge.** Jupiter's audit pipeline already produces this data. RugCheck and Birdeye already show it to you. We're the only one that gives you a **sized playbook** like a pro would.
-- **Solana-native.** Pulls from Jupiter (used by Phantom, Solflare, every Solana wallet) — perfect ecosystem fit.
-- **Demo lands instantly.** Paste → 1.5s analysis → veteran's playbook with concrete numbers. No setup, no install, no wallet connection.
-- **AI used properly.** LLM for *explanation*, not classification. Rule-based deterministic engine produces verifiable numbers; LLM presents them in a trader's voice.
+- **Solves a real, time-pressured problem.** Traders need to evaluate fresh contracts in seconds — not minutes — and most of them aren't on-chain analysts.
+- **Solana-native.** Pulls from Jupiter Tokens V2 (the same data pipeline Phantom and Solflare use) — perfect ecosystem fit, sub-second analysis.
+- **Demo lands instantly.** Paste → ~1.5s analysis → veteran's playbook with concrete numbers. No setup, no install, no wallet connection.
+- **AI used properly.** LLM for *explanation*, not classification. A rule-based deterministic engine produces verifiable numbers; the LLM presents them in a trader's voice.
+- **Outputs are actionable.** Position size in dollars, calibrated to liquidity depth. Stop-loss percentage. Take-profit ladder. Kill criteria. The data the trader actually needs to make a call.
 
 ### Tracks
 

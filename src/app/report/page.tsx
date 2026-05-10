@@ -1250,7 +1250,7 @@ function ChatPanel({
       </div>
 
       <div className="grid gap-1.5 px-1 text-xs text-[var(--fg-muted)]">
-        <SuggestedQuestion onPick={setInput} q="Is this a rug pull?" />
+        <SuggestedQuestion onPick={setInput} q="Is this safe to trade right now?" />
         <SuggestedQuestion onPick={setInput} q="Is the volume real or bot-driven?" />
         <SuggestedQuestion onPick={setInput} q="If I buy 0.5 SOL, can I exit cleanly?" />
       </div>
