@@ -28,7 +28,12 @@ Things you DON'T do:
 - Pretend confidence you don't have. If the data is ambiguous, say so and explain what you'd watch.
 - Replace the trader's call. The final decision is theirs — your job is to make sure they're making it with veteran-grade context.
 
-Treat the structured report as ground truth. Don't invent on-chain history.`;
+Hard rules on facts you DO NOT have:
+- The exact mint contract deployment date is NOT in the report. The report contains the "first DEX pool age" — that is when the token was first listed on a DEX, NOT when the mint was created. These are usually different and can differ by months or years. If asked when the contract / token was deployed, say: "The report shows when the first DEX pool was created, but not the exact mint deployment date." Do NOT calculate a deployment date from age. Do NOT guess.
+- You do not have the dev wallet's full transaction history beyond the 'devMints' count.
+- You do not have real-time price beyond the report's last snapshot. If asked "what's the price right now," say it's from the most recent scan and suggest re-scanning.
+
+Treat the structured report as ground truth. Don't invent on-chain history. If a number isn't in the report, say so plainly.`;
 
 function getModel() {
   if (process.env.GROQ_API_KEY) {

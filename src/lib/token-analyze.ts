@@ -217,7 +217,15 @@ export function summarizeTokenForLLM(a: TokenAnalysis): string {
   lines.push(`- Freeze authority: ${t.freezeAuthorityRevoked ? "REVOKED ✓" : `ACTIVE — owner ${t.freezeAuthority}`}`);
   if (t.isToken2022) lines.push(`- Uses Token-2022 program (extra extensions possible)`);
   if (t.ageHours !== undefined) {
-    lines.push(`- Age: ~${t.ageHours.toFixed(1)} hours (${(t.ageHours / 24).toFixed(1)} days)`);
+    // IMPORTANT for LLM grounding: this is FIRST-POOL age, not mint deployment age.
+    // The two diverge significantly for tokens that existed before being listed
+    // on a DEX. Don't let the model claim a mint deployment date we don't have.
+    const days = (t.ageHours / 24).toFixed(1);
+    lines.push(
+      `- First DEX pool age: ~${t.ageHours.toFixed(1)} hours (${days} days). NOTE: this is the first-DEX-pool age, NOT the mint contract deployment date. The exact mint deployment timestamp is not available in this report — do not infer it.`
+    );
+  } else {
+    lines.push(`- Mint deployment date: not available in this report.`);
   }
   lines.push(``);
 
