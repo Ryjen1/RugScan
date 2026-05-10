@@ -216,16 +216,28 @@ export function summarizeTokenForLLM(a: TokenAnalysis): string {
   lines.push(`- Mint authority: ${t.mintAuthorityRevoked ? "REVOKED ✓" : `ACTIVE — owner ${t.mintAuthority}`}`);
   lines.push(`- Freeze authority: ${t.freezeAuthorityRevoked ? "REVOKED ✓" : `ACTIVE — owner ${t.freezeAuthority}`}`);
   if (t.isToken2022) lines.push(`- Uses Token-2022 program (extra extensions possible)`);
-  if (t.ageHours !== undefined) {
-    // IMPORTANT for LLM grounding: this is FIRST-POOL age, not mint deployment age.
-    // The two diverge significantly for tokens that existed before being listed
-    // on a DEX. Don't let the model claim a mint deployment date we don't have.
-    const days = (t.ageHours / 24).toFixed(1);
+  if (t.firstPool?.createdAt) {
+    // Treat the first DEX pool date as the "deployment / launch" date — that
+    // is what traders mean colloquially when asking "when was this deployed?"
+    // (i.e. when did this token become tradeable).
+    const date = new Date(t.firstPool.createdAt);
+    const dateStr = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const ageDays = t.ageHours ? Math.round(t.ageHours / 24) : null;
     lines.push(
-      `- First DEX pool age: ~${t.ageHours.toFixed(1)} hours (${days} days). NOTE: this is the first-DEX-pool age, NOT the mint contract deployment date. The exact mint deployment timestamp is not available in this report — do not infer it.`
+      `- Token launch date (first DEX pool created): ${dateStr}${ageDays !== null ? ` (~${ageDays} days ago)` : ""}.`
     );
+    lines.push(
+      `  When the user asks "when was this deployed/launched/created?", USE THIS DATE.`
+    );
+  } else if (t.ageHours !== undefined) {
+    const days = (t.ageHours / 24).toFixed(1);
+    lines.push(`- Token age: ~${days} days.`);
   } else {
-    lines.push(`- Mint deployment date: not available in this report.`);
+    lines.push(`- Token launch date: not available in this report.`);
   }
   lines.push(``);
 
