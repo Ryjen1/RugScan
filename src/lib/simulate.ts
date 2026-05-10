@@ -9,10 +9,11 @@
 const FALLBACK_RPC = "https://api.mainnet-beta.solana.com";
 
 export function getRpcUrl(): string {
-  return (
-    process.env.SOLANA_RPC_URL ??
-    (process.env.HELIUS_API_KEY
-      ? `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`
-      : FALLBACK_RPC)
-  );
+  // Use ||, not ??, so empty-string env values fall through correctly.
+  // (.env.local often has SOLANA_RPC_URL= written but blank.)
+  if (process.env.SOLANA_RPC_URL) return process.env.SOLANA_RPC_URL;
+  if (process.env.HELIUS_API_KEY) {
+    return `https://mainnet.helius-rpc.com/?api-key=${process.env.HELIUS_API_KEY}`;
+  }
+  return FALLBACK_RPC;
 }
